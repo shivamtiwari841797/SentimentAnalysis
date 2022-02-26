@@ -1,21 +1,13 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[69]:
-
-
 import pandas as pd
 data = pd.read_csv("C:/Users/Shipra/Documents/1429_1.csv",error_bad_lines=False, engine ='python', sep=',').head(n = 20)
 data
 
-
-# In[70]:
-
-
 import re
 def clean(text):
 # Removes all special characters and numericals leaving the alphabets
-#     print(type(text))
     if type(text) == str:
         text = re.sub('[^A-Za-z]+', ' ', text)
     else:
@@ -25,15 +17,8 @@ def clean(text):
 
 # Cleaning the text in the review column
 
-
-# In[71]:
-
-
 data['Cleaned Reviews'] = data['reviews.text'].apply(clean)
 data
-
-
-# In[72]:
 
 
 import nltk
@@ -59,9 +44,6 @@ data['POS tagged'] = data['Cleaned Reviews'].apply(token_stop_pos)
 data
 
 
-# In[73]:
-
-
 from nltk.stem import WordNetLemmatizer
 wordnet_lemmatizer = WordNetLemmatizer()
 def lemmatize(pos_data):
@@ -77,9 +59,6 @@ def lemmatize(pos_data):
 
 data['Lemma'] = data['POS tagged'].apply(lemmatize)
 data
-
-
-# In[74]:
 
 
 from textblob import TextBlob
@@ -100,31 +79,14 @@ def analysis(score):
         return 'Positive'
 
 
-# In[77]:
-
-
 fin_data = pd.DataFrame(data[['reviews.text', 'Lemma']])
-
-
-# In[4]:
-
 
 fin_data['Subjectivity'] = fin_data['Lemma'].apply(getSubjectivity) 
 fin_data['Polarity'] = fin_data['Lemma'].apply(getPolarity) 
 fin_data['Analysis'] = fin_data['Polarity'].apply(analysis)
 fin_data
 
-
-# In[76]:
-
-
 tb_counts = fin_data.Analysis.value_counts()
 
 tb_counts
-
-
-# In[ ]:
-
-
-
 
